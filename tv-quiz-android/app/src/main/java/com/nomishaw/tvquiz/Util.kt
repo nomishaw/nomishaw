@@ -63,13 +63,16 @@ object Perms {
 }
 
 object Net {
-    fun lanIp(): String? = try {
-        Collections.list(NetworkInterface.getNetworkInterfaces() ?: return null)
-            .filter { it.isUp && !it.isLoopback }
-            .flatMap { Collections.list(it.inetAddresses) }
-            .firstOrNull { it is Inet4Address && it.isSiteLocalAddress }
-            ?.hostAddress
-    } catch (e: Exception) {
-        null
+    fun lanIp(): String? {
+        return try {
+            val ifaces = NetworkInterface.getNetworkInterfaces() ?: return null
+            Collections.list(ifaces)
+                .filter { it.isUp && !it.isLoopback }
+                .flatMap { Collections.list(it.inetAddresses) }
+                .firstOrNull { it is Inet4Address && it.isSiteLocalAddress }
+                ?.hostAddress
+        } catch (e: Exception) {
+            null
+        }
     }
 }
