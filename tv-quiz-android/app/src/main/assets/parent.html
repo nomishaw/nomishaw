@@ -207,19 +207,12 @@
 
   function renderPerms(p) {
     const box = $('perm-box');
-    if (p.usage && p.overlay) { box.classList.add('hidden'); return; }
-    const missing = [];
-    if (!p.usage) missing.push('<b>使用情况访问</b>（知道正在用哪个 App）');
-    if (!p.overlay) missing.push('<b>显示在其他应用上层</b>（弹出答题画面）');
-    let html = `⚠️ 还缺权限，答题电视暂时不会起作用：<br>${missing.join('<br>')}`;
-    if (onTV) {
-      html += '<div class="row" style="margin-top:10px">' +
-        (!p.usage ? '<button class="btn small" data-open="usage">打开「使用情况访问」</button>' : '') +
-        (!p.overlay ? '<button class="btn small" data-open="overlay">打开「显示在上层」</button>' : '') + '</div>';
-    }
-    html += '<div class="hint" style="margin-top:10px">Sony 电视多半没有这两个设置页，请用电脑执行（见 README）：<br>' +
-      '<code>adb shell appops set com.nomishaw.tvquiz GET_USAGE_STATS allow</code><br>' +
-      '<code>adb shell appops set com.nomishaw.tvquiz SYSTEM_ALERT_WINDOW allow</code></div>';
+    if (p.a11y || (p.usage && p.overlay)) { box.classList.add('hidden'); return; }
+    let html = '⚠️ 还差一步，答题电视暂时不会起作用：<br>' +
+      '请在电视上打开 <b>设置 → 系统 → 无障碍</b>（有的型号叫「辅助功能」）→ 找到 <b>答题电视</b> → 打开。';
+    if (onTV) html += '<div class="row" style="margin-top:10px"><button class="btn small" data-open="a11y">打开无障碍设置</button></div>';
+    html += '<div class="hint" style="margin-top:10px">如果开关是灰色、按不了：到 设置 → 应用 → 答题电视，按遥控器的选项/菜单键，' +
+      '选「允许受限制的设置」，再回来打开。</div>';
     box.innerHTML = html; box.classList.remove('hidden');
     box.querySelectorAll('[data-open]').forEach((b) => b.addEventListener('click', () => Native.openSettings(b.dataset.open)));
   }

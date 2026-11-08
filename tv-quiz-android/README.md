@@ -21,38 +21,29 @@ https://github.com/nomishaw/nomishaw/releases/download/tvquiz-latest/tvquiz.apk
 
 （每次修改代码后 GitHub Actions 会自动重新编译。）
 
-## 二、装到 Sony 电视
+## 二、装到 Sony 电视（不需要电脑命令）
 
-任选一种方法：
+1. 在 Mac 上把 `tvquiz.apk` 复制到 U 盘，插到电视的 USB 口。
+2. 电视上打开 Google Play，搜索安装一个文件管理器，例如 **File Commander** 或 **X-plore File Manager**。
+3. 允许它安装 App：**设置 → 应用 → 安全与限制 → 未知来源**，把刚装的文件管理器打开。
+   （不同型号也可能在 设置 → 隐私权 → 安全与限制，或者第一次安装时电视会自动弹出提示，点「设置」打开即可。）
+4. 用文件管理器打开 U 盘，点 `tvquiz.apk` → 安装。
 
-**方法 A：U 盘**
-1. 把 `tvquiz.apk` 复制到 U 盘，插到电视上。
-2. 电视：设置 → 系统 → 关于 → 连按「Android TV 操作系统版本号」7 次，打开开发者模式。
-3. 设置 → 应用 → 安全与限制 → 未知来源 → 允许「文件管理器」类 App 安装。
-4. 用电视的文件管理器（没有的话，在 Google Play 装一个「File Commander」或「X-plore」）打开 U 盘里的 APK 安装。
+> 会用 adb 的话也可以 `adb install -r tvquiz.apk`。
 
-**方法 B：电脑 adb（推荐，第三步也要用）**
-1. 电视打开开发者模式（同上），再到 设置 → 系统 → 开发者选项，打开「USB 调试」和「网络调试 / ADB 调试」。
-2. 电视 设置 → 网络 里看电视的 IP，比如 `192.168.1.50`。
-3. 电脑装好 [Android platform-tools](https://developer.android.com/tools/releases/platform-tools)，然后：
-   ```
-   adb connect 192.168.1.50
-   adb install -r tvquiz.apk
-   ```
-   第一次连接时，电视上会弹出「允许 USB 调试吗」，选允许。
+## 三、打开「无障碍」开关（只要做一次）
 
-## 三、开两个权限（只要做一次）
+答题电视靠「无障碍」功能来知道电视正在放哪个 App，并在需要时弹出答题界面：
 
-答题电视要知道「现在在看哪个 App」，还要能「盖在别的 App 上面」。Sony 电视的设置里一般找不到这两个开关，用电脑执行：
+1. **设置 → 系统 → 无障碍**（有的型号叫「辅助功能」，英文是 *Accessibility*）。
+2. 找到 **答题电视** → 打开 → 确认。
+3. 如果开关是灰色、按不了：到 **设置 → 应用 → 答题电视**，按遥控器的选项键（⋮ 或 ≡），选 **「允许受限制的设置」**，再回第 1 步。
 
-```
-adb shell appops set com.nomishaw.tvquiz GET_USAGE_STATS allow
-adb shell appops set com.nomishaw.tvquiz SYSTEM_ALERT_WINDOW allow
-```
+打开后，在电视上打开「答题电视」，家长面板顶部的黄色提示消失，就说明开好了。
 
-然后在电视上打开「答题电视」一次。家长面板顶部的黄色提示消失，就说明权限开好了。
-
-> 没有电脑？可以用安卓手机上的 adb 工具 App（例如「Bugjaeger」）连接电视的 IP，执行同样的命令。
+> 用 adb 的人也可以不开无障碍，改用这两条命令：
+> `adb shell appops set com.nomishaw.tvquiz GET_USAGE_STATS allow`
+> `adb shell appops set com.nomishaw.tvquiz SYSTEM_ALERT_WINDOW allow`
 
 ## 四、设置
 

@@ -294,7 +294,8 @@ object Store {
             .put("apps", list)
             .put("perms", JSONObject()
                 .put("usage", Perms.hasUsage(ctx))
-                .put("overlay", Perms.hasOverlay(ctx)))
+                .put("overlay", Perms.hasOverlay(ctx))
+                .put("a11y", Perms.hasAccessibility(ctx)))
             .put("url", if (ip != null) "http://$ip:${RemoteServer.PORT}" else "")
     }
 }

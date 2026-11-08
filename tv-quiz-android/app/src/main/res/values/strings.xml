@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="a11y_description">答题电视需要知道电视正在打开哪个 App，才能在孩子看视频满 10 分钟时弹出答题画面。它不会读取屏幕上的文字，也不会上传任何数据。</string>
+</resources>

@@ -60,6 +60,13 @@ object Perms {
     }
 
     fun hasOverlay(ctx: Context): Boolean = Settings.canDrawOverlays(ctx)
+
+    /** True when the parent switched on 答题电视 in Settings → Accessibility. */
+    fun hasAccessibility(ctx: Context): Boolean {
+        if (QuizAccessibilityService.instance != null) return true
+        val enabled = Settings.Secure.getString(ctx.contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES) ?: return false
+        return enabled.split(':').any { it.startsWith(ctx.packageName + "/") }
+    }
 }
 
 object Net {

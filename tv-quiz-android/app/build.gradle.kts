@@ -11,8 +11,8 @@ android {
         applicationId = "com.nomishaw.tvquiz"
         minSdk = 24
         targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
     }
 
     // A fixed key committed with the project so every CI build can be installed

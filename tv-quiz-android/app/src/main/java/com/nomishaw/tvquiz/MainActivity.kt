@@ -57,6 +57,7 @@ class MainActivity : Activity() {
         fun openSettings(kind: String) {
             runOnUiThread {
                 val intent = when (kind) {
+                    "a11y" -> Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
                     "usage" -> Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
                     "overlay" -> Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
                     else -> Intent(Settings.ACTION_SETTINGS)
