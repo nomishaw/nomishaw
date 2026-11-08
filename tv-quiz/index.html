@@ -312,7 +312,7 @@
     },
     arith5() {
       const a = ri(12, 99), b = ri(3, 12), c = ri(10, 99);
-      return { q: `计算：${a} × ${b} − ${c} = ?`, ...numOptions(a * b - c, [a * (b - c), a * b + c]) };
+      return { q: `计算：${a} × ${b} − ${c} = ?`, ...numOptions(a * b - c, [a * b, a * b + c - 10, a * b - c + 10]) };
     },
     division5() {
       const b = ri(3, 12), ans = ri(6, 40), r = 0;

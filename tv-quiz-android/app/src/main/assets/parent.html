@@ -105,11 +105,17 @@
       <select id="c-bank">
         <option value="math7">初一数学</option>
         <option value="math5">小学高年级数学</option>
-        <option value="mix">数学 + 英语单词</option>
+        <option value="mix">数学 + 英语单词 / Math + English words</option>
         <option value="custom">仅自定义题目</option>
       </select>
     </label>
     <label>每日观看上限（分钟，0 = 不限）<input type="number" id="c-daily" min="0" max="600"></label>
+    <label>题目语言 / Quiz language
+      <select id="c-lang">
+        <option value="zh">中文</option>
+        <option value="en">English</option>
+      </select>
+    </label>
   </div>
   <h3>自定义题目（每行一题：题目 | 正确答案 | 错误答案1 | 错误答案2 …）</h3>
   <textarea id="c-custom" placeholder="中国的首都是哪里？ | 北京 | 上海 | 广州 | 南京"></textarea>
@@ -219,7 +225,7 @@
 
   function fillForm(s) {
     formFilled = true;
-    ['interval', 'penalty', 'extra', 'maxPending', 'daily', 'bank', 'custom'].forEach((k) => { $('c-' + k).value = s.cfg[k]; });
+    ['interval', 'penalty', 'extra', 'maxPending', 'daily', 'bank', 'custom', 'lang'].forEach((k) => { $('c-' + k).value = s.cfg[k]; });
     $('apps').innerHTML = s.apps.length
       ? s.apps.map((a) => `<label class="app"><input type="checkbox" value="${esc(a.pkg)}" ${a.on ? 'checked' : ''}><span>${esc(a.label)}<small>${esc(a.pkg)}</small></span></label>`).join('')
       : '<div class="hint">没读到已安装的 App</div>';
@@ -235,7 +241,7 @@
   $('b-save').addEventListener('click', async () => {
     const cfg = {};
     ['interval', 'penalty', 'extra', 'maxPending', 'daily'].forEach((k) => { cfg[k] = Number($('c-' + k).value); });
-    cfg.bank = $('c-bank').value; cfg.custom = $('c-custom').value;
+    cfg.bank = $('c-bank').value; cfg.custom = $('c-custom').value; cfg.lang = $('c-lang').value;
     cfg.apps = [...document.querySelectorAll('#apps input:checked')].map((i) => i.value);
     if (cfg.bank === 'custom' && !cfg.custom.split('\n').some((l) => l.split('|').filter((x) => x.trim()).length >= 3)) {
       toast('自定义题目是空的，请先写几道题'); return;

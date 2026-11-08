@@ -24,6 +24,7 @@ object Store {
     var daily = 0           // daily watching limit in minutes, 0 = none
     var bank = "math7"
     var custom = ""
+    var lang = "zh"         // quiz language: "zh" or "en"
     val apps = linkedSetOf<String>()   // packages that count as "watching"
     var appsInitialized = false
 
@@ -64,6 +65,7 @@ object Store {
             daily = o.optInt("daily", daily)
             bank = o.optString("bank", bank)
             custom = o.optString("custom", custom)
+            lang = o.optString("lang", lang)
             appsInitialized = o.optBoolean("appsInitialized", false)
             o.optJSONArray("apps")?.let { a ->
                 apps.clear()
@@ -92,7 +94,7 @@ object Store {
         val o = JSONObject()
             .put("pin", pin).put("interval", interval).put("penalty", penalty)
             .put("extra", extra).put("maxPending", maxPending).put("daily", daily)
-            .put("bank", bank).put("custom", custom)
+            .put("bank", bank).put("custom", custom).put("lang", lang)
             .put("appsInitialized", appsInitialized).put("apps", JSONArray(apps.toList()))
             .put("watched", watched).put("pending", pending)
             .put("cooldownUntil", cooldownUntil).put("unlockUntil", unlockUntil)
@@ -192,7 +194,9 @@ object Store {
         .put("mode", mode())
         .put("pending", pending)
         .put("cooldownLeft", maxOf(0L, cooldownUntil - now()))
-        .put("lockReason", if (locked) "家长已锁屏，去做点别的事吧！" else "今天已经看满 $daily 分钟啦，明天再看！")
+        .put("lockType", if (locked) "parent" else "daily")
+        .put("daily", daily)
+        .put("lang", lang)
         .put("bank", bank)
         .put("custom", custom)
 
@@ -263,6 +267,7 @@ object Store {
         daily = num("daily", 0, 600, daily)
         if (o.has("bank")) bank = o.optString("bank", bank)
         if (o.has("custom")) custom = o.optString("custom", custom).take(20_000)
+        if (o.has("lang")) lang = if (o.optString("lang") == "en") "en" else "zh"
         o.optJSONArray("apps")?.let { a ->
             apps.clear()
             for (i in 0 until a.length()) apps.add(a.getString(i))
@@ -287,7 +292,7 @@ object Store {
             .put("cfg", JSONObject()
                 .put("interval", interval).put("penalty", penalty).put("extra", extra)
                 .put("maxPending", maxPending).put("daily", daily)
-                .put("bank", bank).put("custom", custom))
+                .put("bank", bank).put("custom", custom).put("lang", lang))
             .put("stats", JSONObject()
                 .put("watch", statWatch / 60).put("right", statRight).put("wrong", statWrong)
                 .put("log", JSONArray(log)))
