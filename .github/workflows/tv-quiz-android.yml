@@ -1,0 +1,52 @@
+name: Build 答题电视 APK
+
+on:
+  push:
+    paths:
+      - 'tv-quiz-android/**'
+      - '.github/workflows/tv-quiz-android.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tv-quiz-android
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.14.3'
+
+      - name: Build APK
+        run: gradle assembleRelease --no-daemon --stacktrace
+
+      - name: Rename APK
+        run: cp app/build/outputs/apk/release/app-release.apk tvquiz.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tvquiz-apk
+          path: tv-quiz-android/tvquiz.apk
+
+      # A fixed download link for the latest build:
+      # https://github.com/<owner>/<repo>/releases/download/tvquiz-latest/tvquiz.apk
+      - name: Publish to release "tvquiz-latest"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete tvquiz-latest -y --cleanup-tag || true
+          gh release create tvquiz-latest tvquiz.apk \
+            --title "答题电视 APK（最新）" \
+            --notes "Built from ${GITHUB_REF_NAME} @ ${GITHUB_SHA::7}. 安装方法见 tv-quiz-android/README.md" \
+            --target "${GITHUB_SHA}" --prerelease
